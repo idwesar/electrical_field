@@ -1,3 +1,4 @@
+import numpy as np
 import statistics as stats
 
 '''SETUP'''
@@ -21,30 +22,36 @@ def getCoordValue(coord, array):
     value = array[coord[0]][coord[1]]
 
     return value
-    
+
 def getAverage(col, row, array):
     surroundCoords = getSurround(col, row)
     val = 0
     for item in surroundCoords:
-         val += getCoordValue(item, array)
+        val += getCoordValue(item, array)
 
     avg = val / len(surroundCoords)
-    
+
     return avg
+
+def checkNotEdge(coord, box):
+    if coord[0] == 0 or coord[0] == box.shape[0]:
+        return False
+    if coord[1] == 0 or coord[1] == box.shape[1]:
+        return False
+
 
 #make this an 'iterate' function when it works
 for row in range(rows):
-     for col in range(cols):
-        if (col, row) != wires[0] and (col, row) != wires[1] and 0 not in (col, row) and 14 not in (col, row): #if it isnt the wire or the edge
-            avg = getAverage(col, row, box)
-            box[col][row] = avg
-
-print(box)
-
-
-##the edges are only relevant when it comes to reassigning values
+    for col in range(cols):
+        if (col, row) != wires[0] and (col, row) != wires[1]: 
+            if checkNotEdge((col, row), box):
+                avg = getAverage(col, row, box)
+                box[col][row] = avg
 
 
+
+##TODO: check edge coord function
+##TODO: check wire
 
 
 '''TESTING'''
@@ -87,4 +94,6 @@ def testGetAverage():
 # testGetSurround()
 testCoordVal()
 # testGetAverage()
+
+
 
