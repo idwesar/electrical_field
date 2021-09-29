@@ -1,4 +1,3 @@
-import numpy as np
 import statistics as stats
 
 '''SETUP'''
@@ -7,27 +6,9 @@ wires = [(7,3), (7,6)] #want the wires to be in the centre, should write a fucnt
 box = np.zeros((rows, cols))
 
 box[wires[0][0]][wires[0][1]] = 10
-box[wires[1][0]][wires[1][1]] = 10
+box[wires[1][0]][wires[1][1]] = -10
 
-
-#ok now average the four squares around a square
-
-#loop through - the top of the box will be slower but itll all even out eventually
-
-#access a point and get its coords
-# for row in range(rows):
-#     for col in range(cols):
-        # if (col, row) != wires[0] or wires[1]:
-
-
-        #     print(up)
-
-        #     avg = stats.fmean(positions)
-
-            # box[col][row] = avg
-
-
-
+'''FUNCTIONS'''
 def getSurround(col, row):
     up = (col, row-1)
     down = (col, row+1)
@@ -37,15 +18,34 @@ def getSurround(col, row):
     return up, down, left, right
 
 def getCoordValue(coord, array):
-    value = array[coord[0][coord[1]]]
+    value = array[coord[0]][coord[1]]
 
     return value
     
-# def getAverage():
-    #get values of up, down, left, and right
-    #add them together
-    #divide by four
-    #return one value
+def getAverage(col, row, array):
+    surroundCoords = getSurround(col, row)
+    val = 0
+    for item in surroundCoords:
+         val += getCoordValue(item, array)
+
+    avg = val / len(surroundCoords)
+    
+    return avg
+
+#make this an 'iterate' function when it works
+for row in range(rows):
+     for col in range(cols):
+        if (col, row) != wires[0] and (col, row) != wires[1] and 0 not in (col, row) and 14 not in (col, row): #if it isnt the wire or the edge
+            avg = getAverage(col, row, box)
+            box[col][row] = avg
+
+print(box)
+
+
+##the edges are only relevant when it comes to reassigning values
+
+
+
 
 '''TESTING'''
 def testGetSurround():
@@ -57,13 +57,34 @@ def testGetSurround():
     surround = getSurround(col, row)
 
     #assert
-    assert len(surround) == 4 #ok but this doesnt really test it, prob make this test better
+    assert surround[0] == (3, 1)
+    assert surround[1] == (3, 3)
+    assert surround[2] == (2, 2)
+    assert surround[3] == (4, 2)
 
 def testCoordVal():
-    #need to a value into an array, preferably 2d, and then access it to see if the function pulls the value when given coordinates
+    #arrange
+    testarray = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
+
+    #act
+    val = getCoordValue((1, 1), testarray)
+
+    #assert
+    assert val == 1
+
+def testGetAverage():
+    #arrange
+    testarray = [0, 2, 0], [3, 0, 5], [0, 2, 0]
+    testcol, testrow = 1, 1
+
+    #act
+    result = getAverage(testcol, testrow, testarray)
 
 
+    #assert
+    assert result == 3
 
 # testGetSurround()
 testCoordVal()
+# testGetAverage()
 
