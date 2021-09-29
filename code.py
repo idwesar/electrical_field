@@ -33,25 +33,23 @@ def getAverage(col, row, array):
 
     return avg
 
-def checkNotEdge(coord, box):
+def checkNotEdge(coord, box): ##TODO: test me
     if coord[0] == 0 or coord[0] == box.shape[0]:
         return False
     if coord[1] == 0 or coord[1] == box.shape[1]:
         return False
 
+def checkNotWire(coord, wires): ##TODO: test me
+    if (coord) != wires[0] and (coord) != wires[1]:
+        return False
 
 #make this an 'iterate' function when it works
 for row in range(rows):
     for col in range(cols):
-        if (col, row) != wires[0] and (col, row) != wires[1]: 
+        if checkNotWire((col, row), wires): 
             if checkNotEdge((col, row), box):
                 avg = getAverage(col, row, box)
                 box[col][row] = avg
-
-
-
-##TODO: check edge coord function
-##TODO: check wire
 
 
 '''TESTING'''
@@ -92,8 +90,5 @@ def testGetAverage():
     assert result == 3
 
 # testGetSurround()
-testCoordVal()
+# testCoordVal()
 # testGetAverage()
-
-
-
